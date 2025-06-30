@@ -20,7 +20,7 @@ import {MessageDocument} from "@/components/chat-messages/message-document.tsx";
 
 import {useMemo} from "react";
 import {faker} from "@faker-js/faker/locale/pt_BR";
-import {ArrowDownIcon, CopyIcon, RobotIcon, StarIcon} from "@phosphor-icons/react";
+import {ArrowDownIcon, CopyIcon, RobotIcon, SparkleIcon, StarIcon} from "@phosphor-icons/react";
 import {useBoolean} from "usehooks-ts";
 
 interface ChatMessageProps {
@@ -33,7 +33,7 @@ export function ChatMessage(props: ChatMessageProps) {
     const {value, setValue} = useBoolean(false);
 
 
-    const fakeDate = useMemo(() => faker.date.recent().toLocaleDateString('pt-BR', {}), []);
+
     const fakeAvatar = useMemo(() => faker.image.avatar(), []);
     const fakeName = useMemo(() => faker.person.firstName(), []);
 
@@ -125,11 +125,18 @@ export function ChatMessage(props: ChatMessageProps) {
                     className="text-muted-foreground text-md gap-2 flex scale-90 items-center data-[side=right]:flex-row-reverse data-[side=left]:flex-row">
                     <StarIcon className="size-3.5" />
                     <small className="block group-hover:hidden">10:45</small>
-                    <small className="hidden group-hover:block">{fakeDate}</small>
+                    <small className="hidden group-hover:block">25/06/2025 10:45</small>
                     <small>•</small>
-                    <small>{fakeName}</small>
+                    <div className="flex items-center gap-1">
+                        <RobotIcon className="size-3.5" />
+                        <small>BOT</small>
+                    </div>
                     <small>•</small>
-                    <RobotIcon className="size-3.5" />
+                     <div className="flex items-center gap-1">
+                        <SparkleIcon className="size-3.5" />
+                         <small>Gerada com IA</small>
+                     </div>
+
                 </div>
             </div>
         </div>
