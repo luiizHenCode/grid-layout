@@ -35,7 +35,6 @@ export function ChatMessage(props: ChatMessageProps) {
 
 
     const fakeAvatar = useMemo(() => faker.image.avatar(), []);
-    const fakeName = useMemo(() => faker.person.firstName(), []);
 
     const renderMessage = useMemo(() => {
         switch (props.type) {
