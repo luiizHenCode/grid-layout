@@ -43,7 +43,7 @@ export function MyTicketsList() {
             </div>
 
                 <ScrollArea viewportRef={ref} className="overflow-y-auto h-full min-h-0 max-h-full relative">
-                    <div className="flex flex-col gap-2 px-4 pt-2 pb-20 ">
+                    <div className="flex flex-col gap-1 px-4 pt-2 pb-20 ">
 
                 {
                     Array.from({length: 30}).map((_, index) => (

@@ -72,12 +72,10 @@ export function AudioPlayer(props: AudioPlayerProps) {
 
     return (
         <div className={cn(
-            "shadow-sm rounded-lg pl-3 pr-4 h-16 flex items-center gap-3 max-w-76 w-full select-none",
+            "shadow-sm rounded-lg pl-3 pr-4 h-16 flex items-center gap-3 max-w-76 select-none w-fit",
             props.className,
         )}>
             <audio ref={audioRef} src={props.src} preload="metadata" />
-
-
 
             <button
                 onClick={togglePlay}
