@@ -1,13 +1,14 @@
 import {Button} from "@/components/ui/button.tsx";
-import {PaperPlaneRightIcon, PlusSquareIcon, TrashIcon, XIcon} from "@phosphor-icons/react";
+import {PaperPlaneRightIcon, PlayCircleIcon, PlusSquareIcon, TrashIcon, XIcon} from "@phosphor-icons/react";
 import {Avatar, AvatarFallback, AvatarImage} from "@/components/ui/avatar.tsx";
 import {fakerPT_BR} from "@faker-js/faker";
-import { useEffect, useMemo, useState, type Dispatch, type SetStateAction} from "react";
+import { useEffect, useMemo, useRef, useState, type Dispatch, type SetStateAction} from "react";
 import {Input} from "@/components/ui/input.tsx";
 import {SmileIcon} from "lucide-react";
 import {cn} from "@/lib/utils.ts";
 import documentIcon from "@/assets/file.svg";
 import type { FileForm } from "@/components/custom/chat-footer";
+import {ScrollArea, ScrollBar} from "@/components/ui/scroll-area.tsx";
 
 
 
@@ -24,6 +25,7 @@ export function OverlayFilesPreview(props: OverlayFilesPreviewProps) {
 
     const [currentFileIndex, setCurrentFileIndex] = useState<number>(0);
     const [caption, setCaption] = useState<string>("");
+    const refScrollArea = useRef<HTMLDivElement>(null);
 
 
     const fakeImage = fakerPT_BR.image.avatar();
@@ -70,7 +72,7 @@ export function OverlayFilesPreview(props: OverlayFilesPreviewProps) {
             case 'image':
                 return <img src={fileUrl} alt={fileName} className="max-h-[80%] object-contain max-w-[90%]" />;
             case 'video':
-                return <video src={fileUrl} controls className="w-full max-w-2xl h-auto" />;
+                return <video src={fileUrl} controls className="w-full max-w-[90%] max-h-100 h-auto" />;
             case 'audio':
                 return <audio src={fileUrl} controls className="w-full" />;
             default:
@@ -96,7 +98,12 @@ export function OverlayFilesPreview(props: OverlayFilesPreviewProps) {
             case 'image':
                 return <img src={fileUrl} alt={fileName} className="w-full h-full object-cover" />;
             case 'video':
-                return <video src={fileUrl} className="w-full h-full object-cover" />;
+                return (
+                    <div className="relative w-full h-full flex items-center justify-center">
+                        <video src={fileUrl} className="w-full h-full object-cover" />
+                        <PlayCircleIcon weight="fill" className="size-6 absolute"/>
+                    </div>
+                );
             case 'audio':
                 return <span>Audio</span>;
             default:
@@ -159,8 +166,9 @@ export function OverlayFilesPreview(props: OverlayFilesPreviewProps) {
                         </div>
                     )
                 }
-                <div className="absolute bottom-20 left-0 right-0 flex flex-col items-center px-4 gap-2">
-                        <div className="flex items-center gap-1 flex-nowrap overflow-x-auto max-w-svw px-4">
+                <div className="absolute bottom-10 md:bottom-20 left-0 right-0 flex flex-col items-center gap-2">
+                    <ScrollArea viewportRef={refScrollArea} className="w-full h-16 overflow-x-auto">
+                        <div className="flex items-center gap-1 flex-nowrap px-4 justify-center">
                             {formFiles.map((item, index) => {
                                 const isCurrent = currentFileIndex === index;
                                 return (
@@ -188,6 +196,9 @@ export function OverlayFilesPreview(props: OverlayFilesPreviewProps) {
                                 )
                             })}
                         </div>
+                        <ScrollBar orientation="horizontal"/>
+                    </ScrollArea>
+                    <div className="w-full flex items-center justify-center px-4">
                     <div className="flex gap-2 max-w-sm w-full">
                         <div className="w-full relative flex items-center">
                             <Button onClick={props.onAddFiles} variant="ghost" size="icon-rounded" className="absolute left-1">
@@ -208,6 +219,7 @@ export function OverlayFilesPreview(props: OverlayFilesPreviewProps) {
                             variant="default" size="icon-rounded" className="size-11">
                             <PaperPlaneRightIcon weight="fill" className="size-4 text-white" />
                         </Button>
+                    </div>
                     </div>
                 </div>
             </div>
