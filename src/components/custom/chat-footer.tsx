@@ -18,8 +18,9 @@ import {
 import {useBoolean} from "usehooks-ts";
 import {OverlayFilesPreview} from "@/pages/home/overlay-files-preview.tsx";
 
-export interface FilesForm {
+export interface FileForm {
     file: File;
+    fileUrl: string;
     caption: string;
 }
 
@@ -30,7 +31,7 @@ export function ChatFooter() {
 
     const [message, setMessage] = useState<string>("");
     const {value, setValue} = useBoolean(false);
-    const [files, setFiles] = useState<File[]>([]);
+    const [formFiles, setFormFiles] = useState<FileForm[]>([])
 
     const handleSendMessage = () => {
         if (message.trim() === "") return; // Prevent sending empty messages
@@ -48,19 +49,28 @@ export function ChatFooter() {
     const handleFilesChange = (event: ChangeEvent<HTMLInputElement>) => {
         const getFiles = event.target.files;
         if (getFiles && getFiles.length > 0) {
-            setFiles((prevFiles) => [...prevFiles, ...getFiles]);
+            const filesArray: FileForm[] = Array.from(getFiles).map(file => ({
+                file,
+                fileUrl: URL.createObjectURL(file), // Create a URL for the file
+                caption: "" // Initialize caption as empty
+            }));
+            setFormFiles((prev) => [...prev, ...filesArray]); // Add new files to the existing array
+            setValue(false); // Open the file preview overlay
         }
+
+        event.target.value = ""; // Reset the input value to allow re-selection of the same file
 
     }
 
     const onCloseFilesPreview = () => {
-        setFiles([]); // Clear files when closing the preview
+        setFormFiles([]); // Clear the files array
     }
 
-    const handleSendFiles = (files: FilesForm[]) => {
+    const handleSendFiles = (files: FileForm[]) => {
         onCloseFilesPreview();
         alert(`Sending message... ${files.map(file => file.file.name).join(", ")}`);
     }
+
 
 
     return (
@@ -120,9 +130,10 @@ export function ChatFooter() {
             }
 
             {
-                files.length && (
+                formFiles.length && (
                     <OverlayFilesPreview
-                        files={files}
+                        formFiles={formFiles}
+                        setFormFiles={setFormFiles}
                         onClose={onCloseFilesPreview}
                         onAddFiles={handleFileSelection}
                         onSendFiles={handleSendFiles}

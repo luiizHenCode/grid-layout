@@ -2,26 +2,25 @@ import {Button} from "@/components/ui/button.tsx";
 import {PaperPlaneRightIcon, PlusSquareIcon, TrashIcon, XIcon} from "@phosphor-icons/react";
 import {Avatar, AvatarFallback, AvatarImage} from "@/components/ui/avatar.tsx";
 import {fakerPT_BR} from "@faker-js/faker";
-import {useCallback, useEffect, useMemo, useState} from "react";
+import { useEffect, useMemo, useState, type Dispatch, type SetStateAction} from "react";
 import {Input} from "@/components/ui/input.tsx";
 import {SmileIcon} from "lucide-react";
 import {cn} from "@/lib/utils.ts";
 import documentIcon from "@/assets/file.svg";
-import type { FilesForm } from "@/components/custom/chat-footer";
+import type { FileForm } from "@/components/custom/chat-footer";
 
 
 
 interface OverlayFilesPreviewProps {
-    files: File[];
+    formFiles: FileForm[];
+    setFormFiles:  Dispatch<SetStateAction<FileForm[]>>
     onClose: () => void;
     onAddFiles: () => void;
-    onSendFiles: (files: FilesForm[]) => void;
+    onSendFiles: (files: FileForm[]) => void;
 }
 
 export function OverlayFilesPreview(props: OverlayFilesPreviewProps) {
-    const { files, onClose } = props;
-
-    const [formFiles, setFormFiles] = useState<FilesForm[]>([])
+    const { formFiles, setFormFiles, onClose } = props;
 
     const [currentFileIndex, setCurrentFileIndex] = useState<number>(0);
     const [caption, setCaption] = useState<string>("");
@@ -62,13 +61,14 @@ export function OverlayFilesPreview(props: OverlayFilesPreviewProps) {
         return formFiles.map(f => URL.createObjectURL(f.file) as string);
     }, [formFiles]);
 
-    const renderFilePreview = useCallback((file: File, index: number) => {
-        const fileUrl = fileUrls[index] || URL.createObjectURL(file);
-        const fileType = file.type.split('/')[0]; // Get the type (e.g., 'image', 'video', etc.)
+    const renderFilePreview = (file: FileForm) => {
+        const fileUrl = file.fileUrl
+        const fileType = file.file.type.split('/')[0]; // Get the type (e.g., 'image', 'video', etc.)
+        const fileName = file.file.name;
 
         switch (fileType) {
             case 'image':
-                return <img src={fileUrl} alt={file.name} className="max-h-[80%] object-contain max-w-[90%]" />;
+                return <img src={fileUrl} alt={fileName} className="max-h-[80%] object-contain max-w-[90%]" />;
             case 'video':
                 return <video src={fileUrl} controls className="w-full max-w-2xl h-auto" />;
             case 'audio':
@@ -78,22 +78,23 @@ export function OverlayFilesPreview(props: OverlayFilesPreviewProps) {
                     <div className="flex flex-col items-center gap-2">
                         <div className="flex items-center justify-center relative">
                             <img src={documentIcon} alt="Documento" className="object-contain h-32"/>
-                            <span className="text-lg uppercase font-bold text-black/50 absolute -mb-4">{getExtension(file)}</span>
+                            <span className="text-lg uppercase font-bold text-black/50 absolute -mb-4">{getExtension(file.file)}</span>
                         </div>
-                        <span className="text-md">{file.name}</span>
-                        <small className="text-muted-foreground">{getFileSize(file)}</small>
+                        <span className="text-md">{fileName}</span>
+                        <small className="text-muted-foreground">{getFileSize(file.file)}</small>
                     </div>
                 )
         }
-    }, [fileUrls])
+    }
 
-    const renderMinifiedFilePreview = useCallback((file: File, index: number) => {
-        const fileUrl = fileUrls[index] || URL.createObjectURL(file);
-        const fileType = file.type.split('/')[0]; // Get the type (e.g., 'image', 'video', etc.)
+    const renderMinifiedFilePreview = (file: FileForm) => {
+        const fileUrl = file.fileUrl
+        const fileType = file.file.type.split('/')[0]; // Get the type (e.g., 'image', 'video', etc.)
+        const fileName = file.file.name;
 
         switch (fileType) {
             case 'image':
-                return <img src={fileUrl} alt={file.name} className="w-full h-full object-cover" />;
+                return <img src={fileUrl} alt={fileName} className="w-full h-full object-cover" />;
             case 'video':
                 return <video src={fileUrl} className="w-full h-full object-cover" />;
             case 'audio':
@@ -102,11 +103,11 @@ export function OverlayFilesPreview(props: OverlayFilesPreviewProps) {
                 return (
                     <div className="flex items-center justify-center relative scale-70">
                         <img src={documentIcon} alt="Documento" className="object-contain"/>
-                        <span className="text-xs uppercase font-bold text-black/50 absolute bottom-3 scale-80">{getExtension(file)}</span>
+                        <span className="text-xs uppercase font-bold text-black/50 absolute bottom-3 scale-80">{getExtension(file.file)}</span>
                     </div>
                 )
         }
-    }, [fileUrls])
+    };
 
     const onRemoveFile = (index: number) => {
         setFormFiles(prevFiles => {
@@ -115,29 +116,15 @@ export function OverlayFilesPreview(props: OverlayFilesPreviewProps) {
             return updatedFiles;
         });
 
-        if (currentFileIndex >= formFiles.length - 1) {
-            setCurrentFileIndex(prevIndex => Math.max(0, prevIndex - 1));
-        } else {
-            setCurrentFileIndex(index > 0 ? index - 1 : 0);
+        if (formFiles.length === 1) {
+           return onClose(); // Close the overlay if no files are left
         }
 
-        if (formFiles.length === 1) {
-            onClose(); // Close the overlay if no files are left
-        }
+        const newIndex = index > 0 ? index - 1 : 0
+        setCurrentFileIndex(newIndex);
+        setCaption(formFiles[newIndex].caption);
     }
 
-    useEffect(() => {
-        if (files.length > 0) {
-            const newFormFiles: FilesForm[] = files.map(file => ({
-                file,
-                caption: ""
-            }));
-            setFormFiles(newFormFiles);
-        } else {
-            setFormFiles([]);
-        }
-
-    }, [files]);
 
     useEffect(() => {
         return () => {
@@ -166,9 +153,9 @@ export function OverlayFilesPreview(props: OverlayFilesPreviewProps) {
                     </div>
                 </div>
                 {
-                    formFiles.length > 0 && formFiles[currentFileIndex].file && (
+                    formFiles.length > 0 && formFiles[currentFileIndex] && (
                         <div className="flex items-center justify-center">
-                            {renderFilePreview(formFiles[currentFileIndex].file, currentFileIndex)}
+                            {renderFilePreview(formFiles[currentFileIndex])}
                         </div>
                     )
                 }
@@ -189,7 +176,7 @@ export function OverlayFilesPreview(props: OverlayFilesPreviewProps) {
                                             )
                                         }
                                     >
-                                        {renderMinifiedFilePreview(item.file, index)}
+                                        {renderMinifiedFilePreview(item)}
                                         {
                                             isCurrent && (
                                                 <div className="absolute bg-black/50 flex items-center justify-center size-13">
