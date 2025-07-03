@@ -47,7 +47,7 @@ export function MyTicketsList() {
                                 </Avatar>
                             </Button>
                         </PopoverTrigger>
-                        <PopoverContent side="bottom" align="end" className="p-0">
+                        <PopoverContent side="bottom" align="end" className="p-0 lg:hidden">
                             <div className="flex flex-col">
 
                                 <div className="flex items-center gap-2 p-3">

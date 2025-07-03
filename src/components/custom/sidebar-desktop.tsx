@@ -130,7 +130,7 @@ export function SidebarDesktop() {
                             </Avatar>
                         </Button>
                     </PopoverTrigger>
-                    <PopoverContent side="right" align="end" className="p-0">
+                    <PopoverContent side="right" align="end" className="p-0 block max-lg:hidden">
                         <div className="flex flex-col">
 
                             <div className="flex items-center gap-2 p-3">
