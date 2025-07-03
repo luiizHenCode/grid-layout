@@ -13,7 +13,7 @@ export function Chat() {
     const params = useParams() as {ticketId?: string};
     const hasTicketId = !!params.ticketId;
 
-    const [showTicketInfo, setShowTicketInfo] = useState<boolean>(false);
+    const [showTicketInfo, setShowTicketInfo] = useState<boolean>(true);
 
     const {showRecord, setShowRecord} = useChatActions();
 

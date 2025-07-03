@@ -130,7 +130,7 @@ export function ChatFooter() {
             }
 
             {
-                formFiles.length && (
+                formFiles.length > 0 && (
                     <OverlayFilesPreview
                         formFiles={formFiles}
                         setFormFiles={setFormFiles}
