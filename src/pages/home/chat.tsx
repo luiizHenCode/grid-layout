@@ -33,7 +33,7 @@ export function Chat() {
             <div
                 className={
                 cn(
-                    "flex items-center justify-center h-full bg-chat",
+                    "flex items-center justify-center h-full bg-[url(/src/assets/bg-chat.svg)] dark:bg-[url(/src/assets/bg-chat-dark.svg)]",
                     !hasTicketId && "max-md:hidden",
                 )
                 }>
@@ -46,8 +46,8 @@ export function Chat() {
         <div
             data-showinfo={showTicketInfo}
             className={cn(
-                "grid data-[showinfo=true]:grid-cols-[1fr_minmax(300px,25rem)] h-full min-h-0 bg-chat",
-                "max-xl:data-[showinfo=true]:grid-cols-[1fr]",
+                "grid data-[showinfo=true]:grid-cols-[1fr_minmax(300px,25rem)] h-full min-h-0 bg-[url(/src/assets/bg-chat.svg)]",
+                "max-xl:data-[showinfo=true]:grid-cols-[1fr] bg-blend-multiply bg-repeat dark:bg-[url(/src/assets/bg-chat-dark.svg)]",
             )}>
 
         <div

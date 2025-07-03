@@ -76,7 +76,12 @@ export function ChatMessage(props: ChatMessageProps) {
                             <MoreVertical className="text-white size-3"/>
                         </Button>
                     </DropdownMenuTrigger>
-                    <DropdownMenuContent side="right" sideOffset={8} className="w-52" align="start">
+                    <DropdownMenuContent
+                        side={props.side === 'left' ? 'right' : 'left'}
+                        sideOffset={8}
+                        className="w-52"
+                        align="start">
+
                         <DropdownMenuItem>
                             Baixar arquivo
                             <DropdownMenuShortcut>

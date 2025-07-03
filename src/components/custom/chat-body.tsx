@@ -29,7 +29,9 @@ export function ChatBody(props: ChatBodyProps) {
     }, [props.ticketId]);
 
     return (
-        <ScrollArea viewportRef={scrollRef} className="overflow-y-auto h-full min-h-0 max-h-full relative">
+        <ScrollArea
+            viewportRef={scrollRef}
+            className="overflow-y-auto h-full min-h-0 max-h-full relative">
             <div
             data-showrecord={showRecord}
             className="flex flex-col py-4 pb-10 data-[showrecord=true]:pb-30">
