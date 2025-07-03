@@ -1,6 +1,6 @@
 import {cn} from "@/lib/utils.ts";
 import {Button} from "@/components/ui/button.tsx";
-import {ListFilter, LogOutIcon, MoreVertical, Plus, Search} from "lucide-react";
+import {ListFilter, LogOutIcon, Moon, Plus, Search, Sun} from "lucide-react";
 import {Input} from "@/components/ui/input.tsx";
 import {ScrollArea} from "@/components/ui/scroll-area.tsx";
 import {useRef, useState} from "react";
@@ -11,8 +11,16 @@ import {Avatar, AvatarFallback, AvatarImage} from "@/components/ui/avatar.tsx";
 import {Separator} from "@/components/ui/separator.tsx";
 import {Switch} from "@/components/ui/switch.tsx";
 import {Label} from "@/components/ui/label.tsx";
+import {useTheme} from "@/components/theme-provider.tsx";
 
 export function MyTicketsList() {
+
+    const {setTheme, theme} = useTheme();
+    const isDarkTheme = theme === "dark";
+
+    const toggleTheme = () => {
+        setTheme(theme === "dark" ? "light" : "dark");
+    };
 
     const params = useParams() as {ticketId?: string};
     const [transferStatus, setTransferStatus] = useState(false);
@@ -33,12 +41,21 @@ export function MyTicketsList() {
                     <Button size="icon" variant="ghost">
                         <ListFilter />
                     </Button>
-                    <Button size="icon" variant="ghost">
-                        <MoreVertical />
+                    <Button
+                        onClick={toggleTheme}
+                        className="lg:hidden"
+                        size="icon" variant="ghost">
+                        {
+                            isDarkTheme ? (
+                                <Moon className="size-4" />
+                            ) : (
+                                <Sun className="size-4" />
+                            )
+                        }
                     </Button>
                     <Popover>
                         <PopoverTrigger asChild>
-                            <Button size="icon" variant="ghost" className="size-10 hover:bg-primary/10 lg:hidden">
+                            <Button size="icon" variant="ghost" className="size-9 lg:hidden">
                                 <Avatar className="size-6 bg-primary">
                                     <AvatarImage />
                                     <AvatarFallback className="bg-primary text-white">
@@ -47,6 +64,7 @@ export function MyTicketsList() {
                                 </Avatar>
                             </Button>
                         </PopoverTrigger>
+
                         <PopoverContent side="bottom" align="end" className="p-0 lg:hidden">
                             <div className="flex flex-col">
 

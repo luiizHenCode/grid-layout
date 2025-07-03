@@ -153,20 +153,43 @@ export function SidebarDesktop() {
                                 <div className="bg-muted-foreground/5 rounded-md">
 
                                     <div className="flex flex-col p-3 gap-1">
-                                    <small className="text-muted-foreground">Permitir transferencia de conversas?</small>
-                                    <div>
-                                        <div className="flex items-center space-x-2">
+                                        <small className="text-muted-foreground">Permitir transferencia de conversas?</small>
+                                            <div className="flex items-center space-x-2">
+                                                <Switch id="transfer-status"
+                                                        checked={transferStatus}
+                                                        onCheckedChange={(checked) => setTransferStatus(checked)}
+                                                        className="scale-80 -ml-0.5"/>
+                                                <Label htmlFor="transfer-status" className="text-sm">
+                                                    {transferStatus ? "Permitir transferências" : "Negar transferências"}
+                                                </Label>
+                                            </div>
+                                    </div>
+                                    <Separator />
+                                    <div className="flex flex-col p-3 gap-1">
+                                            <div className="flex items-center justify-between">
+                                                <Label htmlFor="transfer-status" className="text-sm">
+                                                   Som das notificações
+                                                </Label>
+                                                <Switch id="transfer-status"
+                                                        checked={transferStatus}
+                                                        onCheckedChange={(checked) => setTransferStatus(checked)}
+                                                        className="scale-80 -ml-0.5"/>
+                                            </div>
+                                    </div>
+                                    <Separator />
+                                    <div className="flex flex-col p-3 gap-1">
+                                        <div className="flex items-center justify-between">
+                                            <Label htmlFor="transfer-status" className="text-sm">
+                                                Outra opção habilitavel
+                                            </Label>
                                             <Switch id="transfer-status"
                                                     checked={transferStatus}
                                                     onCheckedChange={(checked) => setTransferStatus(checked)}
                                                     className="scale-80 -ml-0.5"/>
-                                            <Label htmlFor="transfer-status" className="text-sm">
-                                                {transferStatus ? "Permitir transferências" : "Negar transferências"}
-                                            </Label>
                                         </div>
-
                                     </div>
-                                </div>
+
+
 
                                 </div>
 
